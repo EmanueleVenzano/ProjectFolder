@@ -10,17 +10,4 @@ thenewboston
 21/10/2017  15:12                30 bacon.txt
                1 File             30 byte
                2 Directory  192.609.951.744 byte disponibili
- Il volume nell'unit… C Š OS
- Numero di serie del volume: 127B-F233
-
- Directory di C:\Users\emanu\Desktop
-
-21/10/2017  15:07    <DIR>          .
-21/10/2017  15:07    <DIR>          ..
-21/10/2017  12:40             1.183 Android Studio.lnk
-20/10/2017  14:07             1.139 Dia.lnk
-20/10/2017  18:38             1.091 Eclipse Java Oxygen.lnk
-20/10/2017  14:07               885 Notepad++.lnk
-21/10/2017  15:09    <DIR>          prova
-               4 File          4.298 byte
-               3 Directory  192.556.732.416 byte disponibili
+ Il volume i
