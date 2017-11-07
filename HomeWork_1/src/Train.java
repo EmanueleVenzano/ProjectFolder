@@ -14,14 +14,18 @@ public class Train {
 		Path dirPathSpam = Paths.get(args[4]);
 		Path dirPathTab = Paths.get(args[5]);
 		
+		//DirectoryStream perchè è path a cartelle di file
 		DirectoryStream<Path> dirStreamOk = Files.newDirectoryStream(dirPathOk);
 		DirectoryStream<Path> dirStreamSpam = Files.newDirectoryStream(dirPathSpam);
+		
 		String FILENAME = dirPathDict.toString();
 		String T_FILENAME = dirPathTab.toString();
 		
+		//carico in un arraylist tutte le parole presenti nel dizionario 
 		ArrayList <String> Dictionary = new ArrayList <String>();		
 		Dictionary=uploadFile(FILENAME,0);
 				
+		//carico in due arraylist i path delle cartelle ok e spam
 		ArrayList <Path> percorsiOk = new ArrayList<Path>();
 		ArrayList <Path> percorsiSpam = new ArrayList<Path>();
 		for (Path entry: dirStreamOk) {
@@ -31,12 +35,17 @@ public class Train {
 			percorsiSpam.add(entry);
 		}
 		
+		//ogni volta ne lascio fuori 6 oer farne il test
+		//!!!!!!!!!!!!!!!!!!!!!!!!!
+		//MA davvero? Forse occorre creare tutto il progetto doppio, quello in fase di test e di train
+		//altrimenti quando poi faccio fase testing non considero 12 file in ingresso
+		//!!!!!!!!!!!!!!!!!!!!!!!!!
 		//directory.size, dirextory.size/10
 		for (int i=6; i<60; i+=6) {//i indicizza la fine del pacchetto su cui faremo testing
 			//ok part
-			writeTable(T_FILENAME, "OK");
+			writeTable(T_FILENAME, "OK");//Scrivi ok su file indicizzato da T_FILENAME
 			for (int j=0; j<i-6; j++) {//tutti i file prima di quelli del pacchetto di testing
-				makeOutput(percorsiOk.get(j), Dictionary, T_FILENAME);
+				makeOutput(percorsiOk.get(j), Dictionary, T_FILENAME); //scrivi la riga di occorrenze relativa al file j-esimo
 			}
 			for (int j=i; j<60; j++){//tutti i file dopo di quelli del pacchetto di testing
 				makeOutput(percorsiOk.get(j), Dictionary, T_FILENAME);
@@ -57,7 +66,7 @@ public class Train {
 		}
 	}
 	
-	void makeOutput (Path arg, ArrayList <String> Dictionary, String T_FILENAME){
+	ArrayList<Integer> countWord (Path arg, ArrayList<String> Dictionary){
 		ArrayList <String> temp = new ArrayList <String>();
 		ArrayList <Integer> cont = new ArrayList <Integer>(Dictionary.size());
 		
@@ -73,6 +82,13 @@ public class Train {
 				}
 			}
 		}
+		return cont;
+	}
+	
+	void makeOutput (Path arg, ArrayList <String> Dictionary, String T_FILENAME){
+		ArrayList <Integer> cont = new ArrayList <Integer>(Dictionary.size());
+		
+		cont=countWord(arg,Dictionary);
 		writeTable(T_FILENAME, arg.getFileName()+" ");
 		for (int  k=0; k<Dictionary.size(); k++) {
 			writeTable(T_FILENAME, cont.get(k)+" ");
