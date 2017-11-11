@@ -1,83 +1,86 @@
 import java.nio.file.*;
 import java.util.ArrayList;
-import java.io.FileReader;//
-import java.io.BufferedReader;//
+//
+//
 import java.io.*;
 import java.util.Arrays;
 
-//TODO vedere dopo gli argomenti passati
 public class Train {
-	void feed(String[] args) throws Exception {
-		
-		Path dirPathDict = Paths.get(args[2]);
-		Path dirPathOk = Paths.get(args[3]);
-		Path dirPathSpam = Paths.get(args[4]);
-		Path dirPathTab = Paths.get(args[5]);
-		
-		DirectoryStream<Path> dirStreamOk = Files.newDirectoryStream(dirPathOk);
-		DirectoryStream<Path> dirStreamSpam = Files.newDirectoryStream(dirPathSpam);
-		String FILENAME = dirPathDict.toString();
-		String T_FILENAME = dirPathTab.toString();
-		
-		ArrayList <String> Dictionary = new ArrayList <String>();		
-		Dictionary=uploadFile(FILENAME,0);
-				
-		ArrayList <Path> percorsiOk = new ArrayList<Path>();
-		ArrayList <Path> percorsiSpam = new ArrayList<Path>();
-		for (Path entry: dirStreamOk) {
-			percorsiOk.add(entry);
+	private ArrayList<Path> okPath = new ArrayList<Path>();
+	private ArrayList <Path> spamPath = new ArrayList<Path>();
+	private ArrayList <String> dictionary = new ArrayList<String>();
+	private String T_FILENAME;
+	
+	public Train (Path dictPath, Path tabPath, Path dirOkPath, Path dirSpamPath) throws Exception {
+		T_FILENAME = tabPath.toString();
+		DirectoryStream<Path> dirOkStream = Files.newDirectoryStream(dirOkPath);
+		DirectoryStream<Path> dirSpamStream = Files.newDirectoryStream(dirSpamPath);
+		for (Path entry: dirOkStream) {
+			okPath.add(entry);
 		}
-		for (Path entry: dirStreamSpam) {
-			percorsiSpam.add(entry);
+		for (Path entry: dirSpamStream) {
+			spamPath.add(entry);
 		}
-		
-		//directory.size, dirextory.size/10
-		for (int i=6; i<60; i+=6) {//i indicizza la fine del pacchetto su cui faremo testing
-			//ok part
-			writeTable(T_FILENAME, "OK");
-			for (int j=0; j<i-6; j++) {//tutti i file prima di quelli del pacchetto di testing
-				makeOutput(percorsiOk.get(j), Dictionary, T_FILENAME);
-			}
-			for (int j=i; j<60; j++){//tutti i file dopo di quelli del pacchetto di testing
-				makeOutput(percorsiOk.get(j), Dictionary, T_FILENAME);
-			}
-			
-			//spam part
-			writeTable(T_FILENAME, "SPAM");
-			for (int j=0; j<i-6; j++) {
-				makeOutput(percorsiSpam.get(j), Dictionary, T_FILENAME);
-			}
-			for (int j=i; j<60; j++){
-				makeOutput(percorsiSpam.get(j), Dictionary, T_FILENAME);
-			}
-			for (int j=i-6; j<i; j++) {
-				//TEST(percorsiOk.get(j),1)
-				//TEST(percorsiSpam.get(j),1)
-			}
-		}
+		dictionary = uploadFile (dictPath.toString(),0);
 	}
 	
-	void makeOutput (Path arg, ArrayList <String> Dictionary, String T_FILENAME){
-		ArrayList <String> temp = new ArrayList <String>();
-		ArrayList <Integer> cont = new ArrayList <Integer>(Dictionary.size());
-		
-		for (Integer i: cont) {
-			i=0;
-		}
-		String FILENAME = arg.toString();
-		temp=uploadFile(FILENAME,1);
-		for (int k=0; k<Dictionary.size(); k++){
+	ArrayList<Integer> occArray (ArrayList<String> temp, ArrayList<String> dictionary){
+		ArrayList<Integer> cont = new ArrayList<Integer>();
+		for (int k=0; k<dictionary.size(); k++){
 			for (String s: temp) {
-				if (s==Dictionary.get(k)) {
+				if (s==dictionary.get(k)) {
 					cont.set(k,cont.get(k)+1);
 				}
 			}
 		}
-		writeTable(T_FILENAME, arg.getFileName()+" ");
-		for (int  k=0; k<Dictionary.size(); k++) {
-			writeTable(T_FILENAME, cont.get(k)+" ");
+		return cont;
+	}
+	
+	String calcOcc (Path arg, ArrayList<String> dictionary) {
+		String FILENAME = arg.getFileName().toString();
+		ArrayList<String> temp = uploadFile (arg.toString(), 1);
+		ArrayList <Integer> cont = occArray(temp, dictionary);
+		for (int i=0; i< cont.size(); i++) {
+			FILENAME=FILENAME.concat(" ");
+			FILENAME=FILENAME.concat(cont.get(i).toString());
+		}
+		return FILENAME;
+	}
+	
+	void createTable () {
+		String temp;
+		for (int i=0; i<okPath.size(); i++) {
+			temp = calcOcc(okPath.get(i), dictionary);                                        
+    		makeOutput (T_FILENAME, temp);
+		}
+		for (int i=0; i<spamPath.size(); i++) {
+			temp = calcOcc(okPath.get(i), dictionary);                                        
+    		makeOutput (T_FILENAME, temp);
 		}
 	}
+		
+	void makeOutput (String T_FILENAME, String content) {
+		BufferedWriter bw = null;
+		FileWriter fw = null;
+		try {
+			fw = new FileWriter(T_FILENAME);
+			bw = new BufferedWriter(fw);
+			bw.write(content);
+			bw.newLine();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (bw != null)
+					bw.close();
+				if (fw != null)
+					fw.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+	
 	
 	ArrayList<String> uploadFile(String FILENAME, int choose) {
 		ArrayList <String> temp = new ArrayList <String>();
@@ -112,26 +115,5 @@ public class Train {
 			}
 		}
 		return temp;
-	}
-	
-	void writeTable (String T_FILENAME, String content) {
-		BufferedWriter bw = null;
-		FileWriter fw = null;
-		try {
-			fw = new FileWriter(T_FILENAME);
-			bw = new BufferedWriter(fw);
-			bw.write(content);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (bw != null)
-					bw.close();
-				if (fw != null)
-					fw.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
 	}
 }
