@@ -116,15 +116,6 @@ public class Test {
 		return "UNDEFINED";
 	}
 	
-	String analyze (int D, Path file, ArrayList<String> dictionary, String tabPath) {
-		ArrayList<Integer> distanceFromOk = new ArrayList();
-		ArrayList<Integer> distanceFromSpam = new ArrayList();
-		ArrayList<Integer> occInFile = occArray (uploadFile(file.toString(), 1), dictionary);
-		getDistance(occInFile, tabPath, distanceFromOk, distanceFromSpam);
-		String res= attribute(distanceFromOk, distanceFromSpam, D);
-		return file.getFileName().toString().concat(" ").concat(res);
-	}
-	
 	ArrayList<String> uploadFile(String FILENAME, int choose) {
 		ArrayList <String> temp = new ArrayList <String>();
 		FileReader fr = null;

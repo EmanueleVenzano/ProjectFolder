@@ -22,7 +22,7 @@ public class Optimize {
 				if (sCurrentLine == "OK") {
 					label = 1;
 					continue;
-				}if (sCurrentLine == "OK") {
+				}if (sCurrentLine == "SPAM") {
 					label = 2;
 					continue;
 				}
@@ -66,7 +66,7 @@ public class Optimize {
 		ArrayList<Integer> distanceFromSpam = new ArrayList<Integer>();
 		ArrayList<Integer> occInFile = occArray (uploadFile(file.toString(), 1), dictionary);
 		getDistance(occInFile, tabPath, distanceFromOk, distanceFromSpam);
-		String res= resCost(distanceFromOk, distanceFromSpam, D);
+		String res = resCost(distanceFromOk, distanceFromSpam, D);
 		return file.getFileName().toString().concat(" ").concat(res);
 	}
 	
@@ -75,7 +75,7 @@ public class Optimize {
 		ArrayList<Integer> distanceFromSpam = new ArrayList<Integer>();
 		ArrayList<Integer> occInFile = occArray (uploadFile(file.toString(), 1), dictionary);
 		getDistance(occInFile, tabPath, distanceFromOk, distanceFromSpam);
-		String res= resVar(distanceFromOk, distanceFromSpam, p);
+		String res = resVar(distanceFromOk, distanceFromSpam, p);
 		return file.getFileName().toString().concat(" ").concat(res);
 	}
 	
@@ -160,12 +160,11 @@ public class Optimize {
 	}
 	
 	String calcOcc (Path arg, ArrayList<String> dictionary) {
-		String FILENAME = arg.getFileName().toString();
+		String FILENAME = arg.getFileSystem().toString();
 		ArrayList<String> temp = uploadFile (arg.toString(), 1);
 		ArrayList <Integer> cont = occArray(temp, dictionary);
 		for (int i=0; i< cont.size(); i++) {
-			FILENAME=FILENAME.concat(" ");
-			FILENAME=FILENAME.concat(cont.get(i).toString());
+			FILENAME=FILENAME.concat(" ").concat(cont.get(i).toString());
 		}
 		return FILENAME;
 	}

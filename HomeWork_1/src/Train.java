@@ -1,7 +1,6 @@
 import java.nio.file.*;
 import java.util.ArrayList;
-//
-//
+import java.io.IOException;
 import java.io.*;
 import java.util.Arrays;
 
@@ -49,10 +48,12 @@ public class Train {
 	
 	void createTable () {
 		String temp;
+		makeOutput(T_FILENAME, "OK");
 		for (int i=0; i<okPath.size(); i++) {
 			temp = calcOcc(okPath.get(i), dictionary);                                        
     		makeOutput (T_FILENAME, temp);
 		}
+		makeOutput(T_FILENAME, "SPAM");
 		for (int i=0; i<spamPath.size(); i++) {
 			temp = calcOcc(okPath.get(i), dictionary);                                        
     		makeOutput (T_FILENAME, temp);

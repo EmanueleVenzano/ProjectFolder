@@ -1,9 +1,5 @@
 import java.nio.file.*;
 import java.util.ArrayList;
-import java.io.FileReader;//
-import java.io.BufferedReader;//
-import java.io.*;
-import java.util.Arrays;
 
 public class TrainClass extends Optimize {
 	private ArrayList<Path> okPath = new ArrayList<Path>();
@@ -14,7 +10,7 @@ public class TrainClass extends Optimize {
 	private int D;
 	private int p;
 	
-	public TrainClass (Path dictPath, Path tabPath, Path dirOkPath, Path dirSpamPath, Path output, int D, int p) {
+	public TrainClass (Path dictPath, Path tabPath, Path dirOkPath, Path dirSpamPath, Path output, int D, int p) throws Exception {
 		T_FILENAME = tabPath.toString();
 		outputFile = output.toString();
 		DirectoryStream<Path> dirOkStream = Files.newDirectoryStream(dirOkPath);

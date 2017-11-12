@@ -14,10 +14,10 @@ public class Analizator {
 		private String valore;
 		private String delta;
 		private int count;
-		
+	
 		public collec() {
-			valore = "";
-			delta = "";
+			valore = null;
+			delta = null;
 			count = 0;
 		}
 	}
@@ -41,7 +41,7 @@ public class Analizator {
 		try {
 			fr = new FileReader(args[2]);
 			br = new BufferedReader(fr);
-			collec temp;
+			collec temp = null;
 			String sCurrentLine;
 			FileWriter fw =  new FileWriter("output.txt");
 			PrintWriter pw = new PrintWriter (fw);
@@ -66,6 +66,7 @@ public class Analizator {
 					for (int i=0; i<ok.size(); i++) {
 						if (ok.get(i)==aList.get(0)) {
 							lab = 1;
+							break;
 						}
 					}
 					if (lab != 1) {
@@ -76,6 +77,7 @@ public class Analizator {
 					for (int i=0; i<spam.size(); i++) {
 						if (spam.get(i)==aList.get(0)) {
 							lab = 1;
+							break;
 						}
 					}
 					if (lab != 1) {
@@ -85,6 +87,9 @@ public class Analizator {
 					temp.count ++;
 				}
 			}
+			pw.println(temp.delta+" "+temp.valore+" "+ new Integer(temp.count).toString());
+			fw.close();
+			pw.close();
 		 } catch (IOException e) {
 			e.printStackTrace();
 		 } finally {

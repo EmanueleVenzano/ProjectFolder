@@ -10,14 +10,13 @@ public class ListFilesIn {
 
 	// Apre un nuovo directory stream che consente di iterare
 	// i file della directory (come oggetti a interfaccia Path)
-	DirectoryStream<Path> dirStream = Files.newDirectoryStream(dirPath);
-
-	for (Path entry: dirStream) {
-	    // Stampa la entry e anche il nome file
-	    // L'interfaccia Path ha molti metodi per "navigare"
-	    // nel pathname
-	    System.out.println(entry + " " + entry.getFileName());
+	try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(dirPath)){
+		for (Path entry: dirStream) {
+		    // Stampa la entry e anche il nome file
+		    // L'interfaccia Path ha molti metodi per "navigare"
+		    // nel pathname
+		    System.out.println(entry + " " + entry.getFileName().toString());
+		}
 	}
-	
     }
 }
